@@ -11,7 +11,7 @@ import {ToastContainer} from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import Checkout from './pages/Checkout/Checkout'
 import Order from './pages/Order/Order'
-import Verify from './pages/verify'
+import Verify from './pages/Verify'
 import About from './pages/About/About'
 import Services from './pages/Services/Services'
 
