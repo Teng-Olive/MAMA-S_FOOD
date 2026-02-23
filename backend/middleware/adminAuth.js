@@ -1,28 +1,27 @@
-// Import the `jsonwebtoken` package to handle JWT authentication
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
-// Middleware function to authenticate an admin user
-const adminAuth= async (req,res,next) =>{
+const adminAuth = async (req, res, next) => {
     try {
-         // Extract the token from the request headers
-        const {token} = req.headers
-        // If no token is provided, return an unauthorized response
-        if(!token){
-            return res.json({success:false, message: 'Unauthorized User '})
+        const { token } = req.headers;
+        if (!token) {
+            return res.json({ success: false, message: 'Not Authorized. Login Again' });
         }
 
-        // Verify the token using the secret key stored in environment variables
+        // 1. Decode the token (which is now an object { id: '...' })
         const token_decode = jwt.verify(token, process.env.JWT_SECRET);
-          // Check if the decoded token matches the admin's credentials (email + password)
-        if(token_decode !== process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD){
-            return res.json({success:false, message: 'User not authorizes'})
+
+        // 2. Compare the 'id' property of the object
+        const adminIdentity = process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD;
+
+        if (token_decode.id !== adminIdentity) {
+            return res.json({ success: false, message: 'Not Authorized. Login Again' });
         }
-         // If authentication is successful, proceed to the next middleware or route handler
-        next()
+
+        next();
     } catch (error) {
-        return res.json({success:false, message:error.message})
-        
+        console.error("JWT Auth Error:", error.message);
+        return res.json({ success: false, message: "Session expired or invalid. Please login again." });
     }
 }
-// Export the `adminAuth` middleware so it can be used in protected routes
-export default adminAuth
+
+export default adminAuth;

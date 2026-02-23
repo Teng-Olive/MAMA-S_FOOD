@@ -1,15 +1,19 @@
 import express from 'express'
 import cors from 'cors'
 import 'dotenv/config' 
-import connectDB from './config/mongodb.js'
+import { connectDB } from './config/database.js'
 import connectCloudinary from './config/cloudinary.js'
 import userRouter from './routes/userRoute.js'
 import productRouter from './routes/productRoute.js'
 import cartRouter from './routes/cartRoute.js'
 import orderRouter from './routes/orderRoute.js'
+// Import all models to initialize them
+import User from './models/User.js'
+import Product from './models/Product.js'
+import OrderModel from './models/OrderModel.js'
 
 // --- Environment validation: fail fast for missing critical configuration ---
-const requiredEnvs = ['MONGODB_URI', 'JWT_SECRET'];
+const requiredEnvs = ['DB_HOST', 'DB_USER', 'DB_NAME', 'JWT_SECRET'];
 const missingRequired = requiredEnvs.filter((k) => !process.env[k]);
 if (missingRequired.length > 0) {
   console.error(`Missing required environment variable(s): ${missingRequired.join(', ')}.\nPlease create backend/.env (copy from .env.example) or set these variables in your environment.`);

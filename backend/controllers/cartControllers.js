@@ -1,4 +1,4 @@
-import userModel from '../models/userModels.js';
+import User from '../models/User.js';
 
 // function to add product to user cart
 const addToCart = async (req, res) => {
@@ -6,10 +6,8 @@ const addToCart = async (req, res) => {
     const { userId, itemId } = req.body;
 
     // Fetch user data by ID
-    const userData = await userModel.findById(userId);
-    // Initialize cartData if it's missing
-    let cartData = await userData.cartData;
-
+    const userData = await User.findByPk(userId);
+    
     // Check if user exists
     if (!userData) {
       return res
@@ -17,18 +15,20 @@ const addToCart = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
+    // Initialize cartData if it's missing
+    let cartData = userData.cartData || {};
+
     // Check if the product with the given `itemId` already exists in the `cartData`
-if (cartData[itemId]) {
-  // If the product exists, increment the quantity by 1
-  cartData[itemId] += 1;
-} else {
-  // If the product doesn't exist in the cart, initialize it with a quantity of 1
-  cartData[itemId] = 1;
-}
+    if (cartData[itemId]) {
+      // If the product exists, increment the quantity by 1
+      cartData[itemId] += 1;
+    } else {
+      // If the product doesn't exist in the cart, initialize it with a quantity of 1
+      cartData[itemId] = 1;
+    }
 
-
-    // Update the user's `cartData` in the database using the user's `userId`
-    await userModel.findByIdAndUpdate(userId, { cartData });
+    // Update the user's `cartData` in the database
+    await userData.update({ cartData });
 
     // Send a JSON response indicating success and a confirmation message
     res.json({ success: true, message: "Product added to cart" });
@@ -45,16 +45,21 @@ const updateCart = async (req, res) => {
         const { userId, itemId, quantity } = req.body;
     
         // Fetch the user's data from the database using their `userId`
-        const userData = await userModel.findById(userId);
+        const userData = await User.findByPk(userId);
+    
+        // Check if user exists
+        if (!userData) {
+            return res.json({ success: false, message: "User not found" });
+        }
     
         // Retrieve the user's current cart data
-        let cartData = await userData.cartData;
+        let cartData = userData.cartData || {};
     
-        // Update the specified product size with the new quantity in the cart
+        // Update the specified product with the new quantity in the cart
         cartData[itemId] = quantity;
     
         // Save the updated cart data back to the database for the user
-        await userModel.findByIdAndUpdate(userId, { cartData });
+        await userData.update({ cartData });
     
         // Send a success response indicating the cart has been updated
         res.json({ success: true, message: "Cart Updated" });
@@ -75,7 +80,7 @@ const getUserCart = async (req, res) => {
         const { userId } = req.body;
     
         // Fetch the user's data from the database using their `userId`
-        const userData = await userModel.findById(userId);
+        const userData = await User.findByPk(userId);
     
         // Check if the user exists in the database
         if (!userData) {
@@ -84,8 +89,7 @@ const getUserCart = async (req, res) => {
         }
     
         // Retrieve the user's cart data
-        // No `await` is needed here because `cartData` is a direct property of `userData`
-        const cartData = userData.cartData;
+        const cartData = userData.cartData || {};
     
         // Send a success response along with the user's cart data
         res.json({ success: true, cartData });

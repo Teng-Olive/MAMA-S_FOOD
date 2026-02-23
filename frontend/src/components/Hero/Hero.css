@@ -59,7 +59,7 @@
 .hero_bottom{
     display: flex;
     justify-content: space-between;
-    margin-top: 40px;
+    margin-top: 10px;
     width: 100%;
     padding: 25px;
     /* margin-left: 4rem; */
@@ -70,9 +70,13 @@
     display: flex;
     gap: 15px;
 }
+
+.pop {
+    border-right: 2px salmon;
+}
 .info_icon .hero_cc-icon{
     font-size: 44px;
-    color: #d2042d;
+    color: #E67E22;
 }
 .hero_content .detail h3{
     font-size: 22px;

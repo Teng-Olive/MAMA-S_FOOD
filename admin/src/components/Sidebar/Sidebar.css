@@ -1,12 +1,12 @@
 .sidebar-container{
-    width: 22%;
+    width: 40%;
     min-height: 100vh;
     border-right: 2px solid #e5e5e5;
     background-color: #fff;
 }
 .sidebar-header{
     display: flex;
-    justify-content: center;
+    justify-content:flex-start;
     gap: 10px;
 }
 .side-logo{

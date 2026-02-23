@@ -1,6 +1,6 @@
-import orderModel from '../models/orderModels.js';
-import userModel from '../models/userModels.js';
-import productModel from '../models/productModels.js';
+import OrderModel from '../models/OrderModel.js';
+import User from '../models/User.js';
+import Product from '../models/Product.js';
 
 // Placing order using MoMO (Mobile Money)
 const placeOrderMoMo = async (req, res) => {
@@ -8,7 +8,7 @@ const placeOrderMoMo = async (req, res) => {
     const { userId, amount, address } = req.body;
 
     // Fetch user data
-    const userData = await userModel.findById(userId);
+    const userData = await User.findByPk(userId);
     if (!userData) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
@@ -16,7 +16,7 @@ const placeOrderMoMo = async (req, res) => {
     // Retrieve product details for each cart item
     const items = await Promise.all(
       Object.entries(userData.cartData).map(async ([itemId, quantity]) => {
-        const product = await productModel.findById(itemId);
+        const product = await Product.findByPk(itemId);
         return {
           itemId,
           name: product.name,
@@ -42,19 +42,18 @@ const placeOrderMoMo = async (req, res) => {
       date: Date.now(),
     };
 
-    const newOrder = new orderModel(orderData);
-    await newOrder.save();
+    const newOrder = await OrderModel.create(orderData);
 
     // Prepare MoMO payment instructions (replace with real details)
     const momoPhone = process.env.MOMO_PHONE || '+237000000000';
     const paymentInstructions = {
       provider: 'MoMO',
       phone: momoPhone,
-      message: `Send ${amount} to ${momoPhone} and include orderId: ${newOrder._id}`,
+      message: `Send ${amount} to ${momoPhone} and include orderId: ${newOrder.id}`,
     };
 
     // Respond with order and payment instructions
-    res.json({ success: true, message: 'Order placed. Please complete payment via MoMO using the provided instructions.', orderId: newOrder._id, paymentInstructions });
+    res.json({ success: true, message: 'Order placed. Please complete payment via MoMO using the provided instructions.', orderId: newOrder.id, paymentInstructions });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
@@ -67,11 +66,12 @@ const verifyMoMo = async (req, res) => {
 
   try {
     if (success === 'true') {
-      await orderModel.findByIdAndUpdate(orderId, { payment: true });
-      await userModel.findByIdAndUpdate(userId, { cartData: {} });
+      await OrderModel.update({ payment: true }, { where: { id: orderId } });
+      const user = await User.findByPk(userId);
+      await user.update({ cartData: {} });
       res.json({ success: true });
     } else {
-      await orderModel.findByIdAndDelete(orderId);
+      await OrderModel.destroy({ where: { id: orderId } });
       res.json({ success: false });
     }
   } catch (error) {

@@ -28,7 +28,7 @@ const Cart = () => {
       .filter(([, quantity]) => quantity > 0) // Filter out items with zero quantity
       .map(([itemId, quantity]) => ({
         // Assign product ID
-        _id: itemId,
+        id: itemId,
         // Assign quantity
         quantity,
       }));
@@ -48,7 +48,7 @@ const Cart = () => {
         {
           cartData.map((item, index) => {
             // Finding the product details using product ID
-            const productData = products.find(product=> product._id === item._id)
+            const productData = products.find(product=> product.id === item.id)
             if (!productData) {
               return null
             }
@@ -68,7 +68,7 @@ const Cart = () => {
                 onChange={(e) =>
                   e.target.value === "" || e.target.value === "0"
                     ? null
-                    : updateQuantity(item._id, Number(e.target.value)) // Updates quantity when changed
+                    : updateQuantity(item.id, Number(e.target.value)) // Updates quantity when changed
                 }
                 className="quantity-input"
                 type="number"
@@ -76,7 +76,7 @@ const Cart = () => {
                 defaultValue={item.quantity}  // Sets initial value to item's current quantity
               />
 
-                <MdDelete className='delete-icon' onClick={()=> updateQuantity(item._id, 0)}/>
+                <MdDelete className='delete-icon' onClick={()=> updateQuantity(item.id, 0)}/>
               </div>
             )
           })

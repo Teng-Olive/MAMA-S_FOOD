@@ -6,42 +6,43 @@ import { backendUrl } from "../../App";
 import { toast } from "react-toastify";
 
 const Add = ({ token }) => {
-    const [image, setImage] = useState(null);  // Stores the selected image file
-    const [name, setName] = useState("");  // Stores the product name
+    const [image, setImage] = useState(null);
+    const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
-    const [category, setCategory] = useState("All"); // Stores the selected category, defaulting to "All"
+    const [category, setCategory] = useState("Cultural Specials"); // Default to a real category
 
     const onSubmitHandler = async (e) => {
-        e.preventDefault();  // Prevents the default form submission behavior
+        e.preventDefault();
 
         try {
-            // Create a new FormData object to send form data in multipart format
             const formData = new FormData();
-            formData.append("name", name); // Add product name
+            formData.append("name", name);
             formData.append("description", description);
-            formData.append("price", price);
+            formData.append("price", Number(price)); // Ensure price is sent as a number
             formData.append("category", category);
-            if (image) formData.append("image", image);  // Add image only if selected
+            if (image) formData.append("image", image);
+            
+           console.log("Current Token:", token);
+           const response = await axios.post(`${backendUrl}/api/product/add`, formData, {
+    headers: { 
+        token: token // Ensure this matches what your backend middleware expects
+    },
+});
+            
 
-            // Send a POST request to add the product
-            const response = await axios.post(`${backendUrl}/api/product/add`, formData, {
-                headers: { token },  // Include authentication token in the request header
-            });
-
-            // Check if the request was successful
             if (response.data.success) {
                 toast.success(response.data.message);
-                 // Reset input fields after successful submission
                 setName("");
                 setDescription("");
                 setPrice("");
                 setImage(null);
+                setCategory("Cultural Specials");
             } else {
                 toast.error(response.data.message);
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
             toast.error(error.message);
         }
     };
@@ -53,10 +54,8 @@ const Add = ({ token }) => {
                 <div className="image-upload-container">
                     <label htmlFor="image">
                         <img
-                        // if image is not available i.e not image, use a default placeholder image to represent the image when no image is selected
-                        // and if the image is selected and uploaded,create a temporary URL for the selected image file, allowing it to be previewed before uploading.
                             src={!image ? upload_img : URL.createObjectURL(image)}
-                            alt=""
+                            alt="Preview"
                             className="upload-preview"
                         />
                         <input
@@ -82,7 +81,6 @@ const Add = ({ token }) => {
             <div className="form-group">
                 <p className="form-label">Product Description</p>
                 <textarea
-                    type="text"
                     placeholder="Type product description"
                     onChange={(e) => setDescription(e.target.value)}
                     value={description}
@@ -98,8 +96,8 @@ const Add = ({ token }) => {
                         value={category}
                         className="form-select"
                     >
-                        <option value="All">All</option>
-                        <option value="Drinks">Cultural Specials</option>
+                        {/* Values must match your HomeCollection categories exactly */}
+                        <option value="Cultural Specials">Cultural Specials</option>
                         <option value="Spaghetti">Spaghetti</option>
                         <option value="Pizza">Pizza</option>
                         <option value="Rice">Rice</option>
@@ -115,7 +113,8 @@ const Add = ({ token }) => {
                         className="form-input price-input"
                         onChange={(e) => setPrice(e.target.value)}
                         value={price}
-                        placeholder="30"
+                        placeholder="3500"
+                        required
                     />
                 </div>
             </div>

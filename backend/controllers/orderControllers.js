@@ -1,6 +1,6 @@
-import orderModel from '../models/orderModels.js';
-import userModel from '../models/userModels.js';
-import productModel from '../models/productModels.js';
+import OrderModel from '../models/OrderModel.js';
+import User from '../models/User.js';
+import Product from '../models/Product.js';
 import Stripe from 'stripe'
 
 //GATEWAY INITIALIZE
@@ -23,7 +23,7 @@ const placeOrder = async (req, res) => {
         const { userId, amount, address } = req.body;
 
         // Fetch user data to get cart items
-        const userData = await userModel.findById(userId);
+        const userData = await User.findByPk(userId);
         if (!userData) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
@@ -31,7 +31,7 @@ const placeOrder = async (req, res) => {
         // Fetch product details and include name in items array
         const items = await Promise.all(
             Object.entries(userData.cartData).map(async ([itemId, quantity]) => {
-                const product = await productModel.findById(itemId);
+                const product = await Product.findByPk(itemId);
                 
                 if (!product) {
                     throw new Error(`Product with ID ${itemId} not found`);
@@ -62,12 +62,11 @@ const placeOrder = async (req, res) => {
             date: Date.now(),
         };
 
-        // Create a new order document and save it
-        const newOrder = new orderModel(orderData);
-        await newOrder.save();
+        // Create and save the order to database
+        await OrderModel.create(orderData);
 
         // Clear the user's cart
-        await userModel.findByIdAndUpdate(userId, { cartData: {} });
+        await userData.update({ cartData: {} });
 
         // Send success response
         res.json({ success: true, message: "Order Placed" });
@@ -86,12 +85,12 @@ const placeOrderStripe = async (req, res) => {
     try {
       // Extract user ID, amount, and address from request body
       const { userId, amount, address } = req.body;
-       // Get the origin URL from request headers (used for redirect URLs in Stripe)
+      // Get the origin URL from request headers (used for redirect URLs in Stripe)
       const { origin } = req.headers;
   
       // Fetch user data from the database using userId
-      const userData = await userModel.findById(userId);
-       // If the user does not exist, return an error response
+      const userData = await User.findByPk(userId);
+      // If the user does not exist, return an error response
       if (!userData) {
         return res.status(404).json({ success: false, message: "User not found" });
       }
@@ -99,7 +98,7 @@ const placeOrderStripe = async (req, res) => {
       // Retrieve the user's cart items, mapping each item to fetch product details
       const items = await Promise.all(
         Object.entries(userData.cartData).map(async ([itemId, quantity]) => {
-          const product = await productModel.findById(itemId);
+          const product = await Product.findByPk(itemId);
           return {
             itemId, // Product ID
             name: product.name,
@@ -110,12 +109,12 @@ const placeOrderStripe = async (req, res) => {
         })
       );
   
-       // If cart is empty, return an error response
+      // If cart is empty, return an error response
       if (items.length === 0) {
         return res.status(400).json({ success: false, message: "Cart is empty" });
       }
   
-       // Create a new order object to store in the database
+      // Create a new order object to store in the database
       const orderData = {
         userId,  // User ID placing the order
         items, // List of items in the cart
@@ -126,9 +125,8 @@ const placeOrderStripe = async (req, res) => {
         date: Date.now(),
       };
   
-       // Save the new order to the database
-      const newOrder = new orderModel(orderData);
-      await newOrder.save();
+      // Save the new order to the database
+      const newOrder = await OrderModel.create(orderData);
   
       // Convert items into Stripe's required format for checkout session
       const line_items = items.map((item) => ({
@@ -150,20 +148,20 @@ const placeOrderStripe = async (req, res) => {
         quantity: 1, // Always 1 delivery charge per order
       });
   
-       // Ensure Stripe is configured before trying to create a session
+      // Ensure Stripe is configured before trying to create a session
       if (!stripe) {
         return res.status(500).json({ success: false, message: 'Stripe not configured. Set STRIPE_SECRET_KEY in backend/.env' });
       }
 
       // Create a Stripe checkout session with success & cancel URLs
       const session = await stripe.checkout.sessions.create({
-        success_url: `${origin}/verify?success=true&orderId=${newOrder._id}`, // Redirect on successful payment
-        cancel_url: `${origin}/verify?success=false&orderId=${newOrder._id}`,  // Redirect on payment failure
+        success_url: `${origin}/verify?success=true&orderId=${newOrder.id}`, // Redirect on successful payment
+        cancel_url: `${origin}/verify?success=false&orderId=${newOrder.id}`,  // Redirect on payment failure
         line_items, // Items to be purchased
         mode: "payment", // Mode set to payment
       });
   
-       // Send back the Stripe session URL to the frontend for redirection
+      // Send back the Stripe session URL to the frontend for redirection
       res.json({ success: true, session_url: session.url });
     } catch (error) {
       console.log(error);
@@ -181,14 +179,15 @@ const verifyStripe = async (req,res) => {
        // If payment was successful
         if (success === "true") {
           // Update the order status to mark it as paid
-            await orderModel.findByIdAndUpdate(orderId, {payment:true})
+            await OrderModel.update({ payment: true }, { where: { id: orderId } })
             // Clear the user's cart after successful payment
-            await userModel.findByIdAndUpdate(userId, {cartData: {}})
+            const user = await User.findByPk(userId);
+            await user.update({ cartData: {} });
 
             res.json({success:true});
         } else {
           // If payment failed, delete the order from the database
-            await orderModel.findByIdAndDelete(orderId)
+            await OrderModel.destroy({ where: { id: orderId } })
             res.json({success:false})
         }
     } catch (error) {     
@@ -205,8 +204,8 @@ const placeOrderRazorpay = async (req,res)=>{
 // All Orders data for admin panel
 const allOrders = async (req,res)=> {
     try {
-        // Fetch all orders from the database using the order model
-        const orders = await orderModel.find({});
+        // Fetch all orders from the database
+        const orders = await OrderModel.findAll();
     
         // Send a success response to the client, including the retrieved orders
         res.json({ success: true, orders });
@@ -225,7 +224,10 @@ const allOrders = async (req,res)=> {
 const userOrders = async (req, res) => {
     try {
       const { userId } = req.body;
-      const orders = await orderModel.find({ userId }).sort({ date: -1 });
+      const orders = await OrderModel.findAll({ 
+        where: { userId },
+        order: [['date', 'DESC']]
+      });
       res.json({ success: true, orders });
     } catch (error) {
       console.log(error);
@@ -241,7 +243,7 @@ const updateStatus = async (req,res)=> {
         const { orderId, status } = req.body;
     
         // Update the status of the specified order in the database
-        await orderModel.findByIdAndUpdate(orderId, { status });
+        await OrderModel.update({ status }, { where: { id: orderId } });
     
         // Send a success response to the client indicating the status was updated
         res.json({ success: true, message: 'Status Updated' });
@@ -253,8 +255,6 @@ const updateStatus = async (req,res)=> {
         // Send a failure response with the error message
         res.json({ success: false, message: error.message });
     }
-    
-    
 }
 
 export {placeOrder,verifyStripe, placeOrderRazorpay, placeOrderStripe, userOrders, updateStatus, allOrders}

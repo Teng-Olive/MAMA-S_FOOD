@@ -46,7 +46,7 @@ const HomeCollection = () => {
             products
               .filter((product) => category === "All" || category === product.category) // Filtering products based on selected category
               .map((product) => (
-                <div className="product-card" key={product._id}> {/* Assigning unique key to each product */}
+                <div className="product-card" key={product.id}> {/* Assigning unique key to each product */}
                   <div className="product-image">
                     {/* Displaying Product Image */}
                     <img src={product.image} alt={product.title} />
@@ -59,7 +59,7 @@ const HomeCollection = () => {
                   <div className="price-add">
                     <p>{product.price} <span style={{fontSize: '0.7em'}}>{currency}</span></p>
                     <button
-                      onClick={() => addToCart(product._id)} // Calling addToCart function with product ID
+                      onClick={() => addToCart(product.id)} // Calling addToCart function with product ID
                       className="add-to-cart-button"
                     >
                       Add To Cart

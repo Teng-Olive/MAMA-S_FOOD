@@ -1,5 +1,5 @@
 import validator from "validator";
-import userModel from "../models/userModels.js";
+import User from "../models/User.js";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
@@ -15,8 +15,8 @@ const loginUser = async (req, res) => {
         // Extract email and password from the request body
         const { email, password } = req.body;
 
-         // Find a user in the database by email
-        const user = await userModel.findOne({email});
+        // Find a user in the database by email
+        const user = await User.findOne({ where: { email } });
         // If no user is found, return an error response
         if(!user){
             return res.status(404).json({error: "User not found"})
@@ -28,10 +28,10 @@ const loginUser = async (req, res) => {
         // If passwords match, generate a JWT token and return a success response
         if(isMatch){
             // Create a token for the user
-            const token = createToken(user._id);
+            const token = createToken(user.id);
             res.json({success:true,message:"Login Successful", token})
         } 
-         // If passwords do not match, return an error message
+        // If passwords do not match, return an error message
         else{
             res.json({success:false, message:"Incorrect password entered"})
         }
@@ -46,11 +46,11 @@ const loginUser = async (req, res) => {
 const registerUser = async(req,res) => {
    
     try {
-          // Extract name, email, and password from request body
+        // Extract name, email, and password from request body
         const {name, email, password} = req.body;
 
-         // Check if the user already exists in the database
-        const exists = await userModel.findOne({email});
+        // Check if the user already exists in the database
+        const exists = await User.findOne({ where: { email } });
         if (exists) {
             return res.status(400).json({message: "User already exist"})
 
@@ -69,14 +69,16 @@ const registerUser = async(req,res) => {
         const salt = await bcrypt.genSalt(10) // Generate salt for hashing
         const hashedPassword = await bcrypt.hash(password, salt) // Hash the password
 
-        // Create a new user object with hashed password
-        const newUser = new userModel({
-            name, email, password: hashedPassword
-        })
-        // Save the new user to the database
-        const user = await newUser.save();
+        // Create a new user in the database
+        const user = await User.create({
+            name, 
+            email, 
+            password: hashedPassword,
+            cartData: {}
+        });
+        
         // Generate a JWT token for authentication
-        const token = createToken(user._id)
+        const token = createToken(user.id)
         // Send success response with token
         res.json({success:true, message:"Account created successfully", token})
 
@@ -97,7 +99,7 @@ const adminLogin= async(req,res) => {
         // Check if email and password match the stored admin credentials
         if(email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD){
              // Create a JWT token for the admin
-            const token = jwt.sign(email+password, process.env.JWT_SECRET)
+            const token = jwt.sign({ id: email + password }, process.env.JWT_SECRET)
             res.json({success:true, token})
         } else {
             // If credentials are incorrect, return an error message

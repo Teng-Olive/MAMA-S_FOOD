@@ -2,10 +2,9 @@
     display: flex;
     flex-direction: row;
     gap: 6rem;
-    padding-top: 2rem 2rem;
+    padding-top: 2rem;
     min-height: 80vh;
     border-top: 1px solid #ddd;
-    background-color: #c3986d;
 }
 .form-left{
     display: flex;
@@ -18,7 +17,6 @@
     border: 2px solid #ccc;
     padding: 30px;
     border-radius: 10px;
-   
 }
 .payment-method legend{
     text-align: center;

@@ -1,3 +1,8 @@
+product.
+
+
+
+
 .product-container{
     margin-top: 50px;
     
@@ -12,9 +17,13 @@
 }
 .category-section {
   width: 28%;
-  background: #f8f8f8;
+  background: #ffffff;
   padding: 20px;
-  /* border-radius: 8px; */
+ /* border-width: 0.5px;
+  border-color: #E67E22;
+  border-radius: 8px; 
+  border-style:dashed;*/
+  margin-top: 2rem;
 }
 .category-section h1{
   font-size: 25px;

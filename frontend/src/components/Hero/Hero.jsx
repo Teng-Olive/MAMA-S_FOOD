@@ -27,10 +27,12 @@ const Hero = () => {
       <div className="hero_bottom">
         <div className="hero_content">
           <div className="info_icon"><FaShippingFast className='hero_cc-icon'/></div>
+         <div className="pop">
           <div className="detail">
             <h3>Freshly Prepared</h3>
             <p>Made to order for maximum nutrients</p>
           </div>
+         </div>
         </div>
         <div className="hero_content">
           <div className="info_icon"><FiSend className='hero_cc-icon'/></div>
