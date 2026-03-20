@@ -72,8 +72,8 @@ const Orders = ({ token }) => {
         <th>Email</th>
         <th>Telephone</th>
         <th>Shipping Address</th>
-        <th>Product Name</th>
-        <th>Quantity</th>
+        <th>Product</th>
+        <th>Qty</th>
         <th>Items</th>
         <th>Price</th>
         <th>Payment Method</th>

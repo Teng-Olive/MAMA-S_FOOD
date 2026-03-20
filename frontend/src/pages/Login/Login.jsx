@@ -76,11 +76,12 @@ const Login = () => {
         {/* Show Name Input only if user is in Sign Up mode */}
         {
           currentState === 'Login' ? null : (
+            
             <input onChange={(e)=> setName(e.target.value)} value={name}  type="text" className='form-input' placeholder='Full Name' required />
           )
         }
         
-        <input onChange={(e)=> setEmail(e.target.value)} value={email} type="email" className='form-input' placeholder='Email' required />
+        <input onChange={(e)=> setEmail(e.target.value)} value={email} type="email" className='form-input' placeholder='Enter your email' required />
         <input onChange={(e)=> setPassword(e.target.value)} value={password} type="password" className='form-input' placeholder='Password' required />
         <div className="form_footer">
           <p className="forgot-pswd"> Forgot password</p>

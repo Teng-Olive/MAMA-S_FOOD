@@ -21,6 +21,8 @@ const Checkout = () => {
         country: "",
         state: "",
         phone: "",
+        orderType: "delivery", // Default to delivery
+        pickupTime: "",
     });
 
     const onChangeHandler = (event) => {
@@ -55,6 +57,7 @@ const Checkout = () => {
                 address: formData,
                 items: orderItems,
                 amount: getCartAmount() + delivery_fee,
+                pickupTime: formData.orderType === "pickup" ? formData.pickupTime : null,
             };
 
             switch (method) {
@@ -105,7 +108,7 @@ const Checkout = () => {
 
     useEffect(() => {
         // Including token as a dependency
-        // Your token-related logic here...
+        // Your token-related logic here
     }, [token]);
 
     return (
@@ -206,6 +209,78 @@ const Checkout = () => {
                         onChange={onChangeHandler}
                     />
                 </div>
+               
+                <fieldset className="pickup-options">
+                    <legend>Order Type</legend>
+                    <div className="pickup-choice">
+                        <label>
+                            <input
+                                type="radio"
+                                name="orderType"
+                                value="delivery"
+                                checked={formData.orderType === "delivery"}
+                                onChange={onChangeHandler}
+                            />
+                            Delivery
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="orderType"
+                                value="pickup"
+                                checked={formData.orderType === "pickup"}
+                                onChange={onChangeHandler}
+                            />
+                            Pickup
+                        </label>
+                    </div>
+                    {formData.orderType === "pickup" && (
+                        <div className="pickup-time">
+                            <label htmlFor="pickupTime">Select Pickup Time:</label>
+                            <select
+                                id="pickupTime"
+                                name="pickupTime"
+                                value={formData.pickupTime}
+                                onChange={onChangeHandler}
+                                className="form-input"
+                            >
+                                <option value="">Select Time</option>
+                                <option value="asap">ASAP</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="13:00">1:00 PM</option>
+                                <option value="14:00">2:00 PM</option>
+                                <option value="15:00">3:00 PM</option>
+                                <option value="16:00">4:00 PM</option>
+                                <option value="17:00">5:00 PM</option>
+                                <option value="18:00">6:00 PM</option>
+                            </select>
+                        </div>
+                    )}
+                
+                     {formData.orderType === "delivery" && (
+                        //for delivery
+                        <div className="delivery">
+                            <label htmlFor="delivery">Delivery time:</label>
+                            <select
+                                id="delivery"
+                                name="delivery"
+                                value={formData.delivery}
+                                onChange={onChangeHandler}
+                                className="form-input"
+                            >
+                                <option value="">Select Delivery time</option>
+                                <option value="asap">ASAP</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="13:00">1:00 PM</option>
+                                <option value="14:00">2:00 PM</option>
+                                <option value="15:00">3:00 PM</option>
+                                <option value="16:00">4:00 PM</option>
+                                <option value="17:00">5:00 PM</option>
+                                <option value="18:00">6:00 PM</option>
+                            </select>
+                        </div>
+                    )}
+                </fieldset>
             </div>
             <div className="form-right">
                 <CartTotal />

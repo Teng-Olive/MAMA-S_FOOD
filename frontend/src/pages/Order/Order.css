@@ -24,6 +24,7 @@
 }
 .order-item-image{
     width: 6rem;
+    border-bottom: 1px solid #e5e7eb;
 }
 .order-item-name{
     font-weight: 600;

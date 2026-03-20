@@ -15,8 +15,16 @@ const addToCart = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
-    // Initialize cartData if it's missing
+    // Initialize cartData if it's missing, and ensure it's an object
     let cartData = userData.cartData || {};
+    if (typeof cartData === "string") {
+      try {
+        cartData = JSON.parse(cartData);
+      } catch (err) {
+        // If parsing fails, reset to an empty object
+        cartData = {};
+      }
+    }
 
     // Check if the product with the given `itemId` already exists in the `cartData`
     if (cartData[itemId]) {

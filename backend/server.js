@@ -43,4 +43,19 @@ app.get('/', (req,res)=> {
     res.send("API Working")
 })
 
-app.listen(port, ()=> console.log('Sever started on Port: ' + port))
+// Start server with basic EADDRINUSE handling (tries next port if busy)
+const startServer = (p) => {
+  const server = app.listen(p, () => console.log(`Server started on port: ${p}`));
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.warn(`Port ${p} is already in use. Trying port ${p + 1}...`);
+      startServer(p + 1);
+    } else {
+      console.error(err);
+      process.exit(1);
+    }
+  });
+};
+
+startServer(port);

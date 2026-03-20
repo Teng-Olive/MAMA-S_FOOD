@@ -1,8 +1,11 @@
 .sidebar-container{
-    width: 40%;
+    width: 50%;
     min-height: 100vh;
     border-right: 2px solid #e5e5e5;
     background-color: #fff;
+    font-size: 50px;
+    font-family: poppins;
+
 }
 .sidebar-header{
     display: flex;
@@ -12,9 +15,11 @@
 .side-logo{
     font-size: 38px;
     margin-top: 18px;
+    color: #E67E22;
 }
 .sidebar-header h2{
     font-size: 30px;
+    color:#E67E22
 }
 .sidebar-links{
     display: flex;
@@ -35,7 +40,7 @@
 }
 .sidebar-link:hover{
     background-color: #f3f4f6;
-    color: #e67d22a6;
+    color: #e0dcd8a6;
 }
 .sidebar-icon{
     font-size: 30px;

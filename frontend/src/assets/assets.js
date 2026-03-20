@@ -74,15 +74,7 @@ export const assets = {
 }
 
 export const product = [
-    {
-        _id: "a",
-        name: "Special Fried Rice With Chicken",
-        description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 100,
-        image: food1 ,
-        category: "Rice",
-           date: 1716634345448,
-            },
+   
     {
         _id: "ab",
         name: "Freshly Baked Pepperoni Pizza",
@@ -92,15 +84,7 @@ export const product = [
         category: "Pizza",
             date: 1716621345448,
             },
-    {
-        _id: "ac",
-        name: "Delicious Stir Fry Veggie Noodles ",
-        description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-        price: 220,
-        image: food3,
-        category: "Noodles",
-            date: 1716234545448,
-            },
+    
     {
         _id: "ad",
         name: "Cup of Tequilla Sunrise Cocktail",
@@ -263,68 +247,12 @@ export const product = [
             
 
             
-    // {
-    //     _id: "ao",
-    //     name: "Men Tapered Fit Flat-Front Trousers",
-    //     description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-    //     price: 140,
-    //     image: food15,
-    //     category: "Men",
+    
         
-    //     date: 1716627745448,
+    
         
-    // },
-    // {
-    //     _id: "ap",
-    //     name: "Kids Fashion Slim Fit Casual",
-    //     description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-    //     price: 170,
-    //     image: food16,
-    //     category: "Kids",
-        
-    //     date: 1716628845448,
-        
-    // },
-    // {
-    //     _id: "aq",
-    //     name: "Men Tapered Fit Flat-Front Trousers",
-    //     description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-    //     price: 150,
-    //     image: food17,
-    //     category: "Men",
-        
-    //     date: 1716629945448,
-        
-    // },
-    // {
-    //     _id: "ar",
-    //     name: "Boy Casaul Slim Fit Polo Shirt",
-    //     description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-    //     price: 180,
-    //     image: food18,
-    //     category: "Kids",
-        
-    //     date: 1716631045448,
-        
-    // },
-    // {
-    //     _id: "as",
-    //     name: "Boy Casaul Slim Fit Polo Shirt",
-    //     description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-    //     price: 160,
-    //     image: food19,
-    //     category: "Kids",
-        
-    //     date: 1716632145448,
-        
-    // },
-    // {
-    //     _id: "at",
-    //     name: "Women Palazzo Pants with Waist Belt",
-    //     description: "A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.",
-    //     price: 190,
-    //     image: food20,
-    //     category: "Women",
+   ]
+    
         
     //     date: 1716633245448,
         
@@ -431,4 +359,3 @@ export const product = [
     //     date: 1716643145448,
         
     // },
-]

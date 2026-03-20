@@ -5,6 +5,7 @@
     padding-top: 2rem;
     min-height: 80vh;
     border-top: 1px solid #ddd;
+    
 }
 .form-left{
     display: flex;
@@ -12,6 +13,9 @@
     gap: 1rem;
     width: 100%;
     max-width: 650px;
+    background-color: rgb(228, 229, 229);
+    padding: 30px;
+    border-radius: 16px;
 }
 .payment-method{
     border: 2px solid #ccc;
@@ -67,10 +71,15 @@
 }
 .form-right{
     width: 480px;
+    border-color: #E67E22;
+    border: #E67E22 solid 1px;
+    padding: 16px;
+    border-radius: 16px;
 }
 .form-submit{
     text-align: right;
     margin-top: 2rem;
+    
 }
 .submit-button{
     background-color: #00000000;
@@ -81,4 +90,47 @@
     border: orange solid 2px;
     border-radius: 5px;
     cursor: pointer;
+}
+/*pickup styles*/
+.pickup-options {
+    border: 2px orange solid;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 1rem;
+}
+
+.pickup-options legend {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 1rem;
+}
+
+.pickup-choice {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1rem;
+    
+}
+
+.pickup-choice label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.pickup-time {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pickup-time label {
+    font-weight: bold;
+}
+
+.pickup-time select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }

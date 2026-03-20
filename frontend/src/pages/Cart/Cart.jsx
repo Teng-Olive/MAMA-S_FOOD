@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../../context/ShopContext'
 import { MdDelete } from 'react-icons/md'
+import { toast } from 'react-toastify'
 import CartTotal from '../../components/CartTotal/CartTotal'
 import './Cart.css'
 
 const Cart = () => {
 
   // Extracting necessary values and functions from ShopContext
-  const {products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext)
+  const {products, currency, cartItems, updateQuantity, navigate, token } = useContext(ShopContext)
 
     // State to store transformed cart data
   const [cartData, setCartData] = useState([])
@@ -38,6 +39,15 @@ const Cart = () => {
   }, [cartItems, products]); // Dependency array ensures this runs when cartItems or products change
 
 
+
+  const handleProceedToCheckout = () => {
+    if (!token) {
+      toast.info("Please log in or sign up to proceed to checkout.");
+      navigate("/login");
+      return;
+    }
+    navigate("/checkout");
+  };
 
   return (
     <div>
@@ -86,7 +96,7 @@ const Cart = () => {
         <div className="checkout-box">
           <CartTotal />
           <div className="checkout-button-container">
-            <button onClick={()=> navigate("/checkout") } className="checkout-button">PROCCED TO CHECKOUT</button>
+            <button onClick={handleProceedToCheckout} className="checkout-button">PROCCED TO CHECKOUT</button>
           </div>
         </div>
       </div>

@@ -4,8 +4,8 @@ import "./HomeCollection.css"; // Importing CSS file for styling
 import { categoryItem } from "../../assets/assets"; // Importing category items data
 
 const HomeCollection = () => {
-  // Extracting products and addToCart function from ShopContext
-  const { products, addToCart, currency } = useContext(ShopContext);
+  // Extracting products, searchTerm and addToCart function from ShopContext
+  const { products, addToCart, currency, searchTerm } = useContext(ShopContext);
 
   // State to manage the selected category (default is "All")
   const [category, setCategory] = useState("All");
@@ -45,6 +45,14 @@ const HomeCollection = () => {
           {products.length > 0 ? (
             products
               .filter((product) => category === "All" || category === product.category) // Filtering products based on selected category
+              .filter((product) => {
+                if (!searchTerm) return true;
+                const q = searchTerm.toLowerCase();
+                const name = product.name ? product.name.toLowerCase() : "";
+                const desc = product.description ? product.description.toLowerCase() : "";
+                const cat = product.category ? product.category.toLowerCase() : "";
+                return name.includes(q) || desc.includes(q) || cat.includes(q);
+              })
               .map((product) => (
                 <div className="product-card" key={product.id}> {/* Assigning unique key to each product */}
                   <div className="product-image">

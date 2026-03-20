@@ -10,7 +10,7 @@ const Sidebar = ({setToken}) => {
     <div className='sidebar-container'>
       <div className="sidebar-header">
         <FaUtensils className='side-logo' />
-        <h2>Mama.k</h2>
+        <h2>FOAS</h2>
       </div>
       <div className="sidebar-links">
         <NavLink className='sidebar-link' to="/add">

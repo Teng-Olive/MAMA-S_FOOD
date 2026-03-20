@@ -40,7 +40,7 @@
     transition: border-color 0.2s;
 }
 .form-input:focus{
-    border-color: #333;
+    border-color: #d7cbcb;
 }
 .form-button{
     display: block;

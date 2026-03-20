@@ -29,8 +29,17 @@ const placeOrder = async (req, res) => {
         }
 
         // Fetch product details and include name in items array
+        let cartData = userData.cartData || {};
+        if (typeof cartData === "string") {
+            try {
+                cartData = JSON.parse(cartData);
+            } catch (err) {
+                cartData = {};
+            }
+        }
+
         const items = await Promise.all(
-            Object.entries(userData.cartData).map(async ([itemId, quantity]) => {
+            Object.entries(cartData).map(async ([itemId, quantity]) => {
                 const product = await Product.findByPk(itemId);
                 
                 if (!product) {

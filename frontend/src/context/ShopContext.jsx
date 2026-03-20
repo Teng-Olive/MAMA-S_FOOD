@@ -19,25 +19,44 @@ const ShopContextProvider =({children}) => {
     const [token, setToken] = useState('');
     const navigate = useNavigate();
 
+    // Ensures the user is logged in before performing cart actions.
+    // If not logged in, redirect to the login page and show a toast message.
+    const ensureLoggedIn = () => {
+        const validToken = token && token !== "null" && token !== "undefined";
+        if (!validToken) {
+            // Clean up stale token values from local storage/state
+            setToken("");
+            localStorage.removeItem("token");
+
+            toast.info("Please log in or sign up to manage your cart.");
+            navigate("/login");
+            return false;
+        }
+        return true;
+    };
+
     const updateSearchTerm = (term) => {
         setSearchTerm(term);
     };
 
     const addToCart = async (itemId) => {
+        // Require authentication before allowing cart actions
+        if (!ensureLoggedIn()) return;
+
         // Create a copy of the current cart items to avoid directly mutating the state
         const updatedCart = { ...cartItems };
         // If the item already exists in the cart, increase its quantity by 1; otherwise, set it to 1
         updatedCart[itemId] = (updatedCart[itemId] || 0) + 1;
-            // Update the cart state with the new cart data
+        // Update the cart state with the new cart data
         setCartItems(updatedCart);
         console.log(`Product added to cart: Item ID - ${itemId}, Current Cart:`, updatedCart);
-         // Display a success message to the user
+        // Display a success message to the user
         toast.success(`Added product to the cart!`);
 
         // If the user is authenticated (has a token), sync the cart update with the backend
         if (token) {
             try {
-                 // Send a request to the backend to update the cart in the database
+                // Send a request to the backend to update the cart in the database
                 await axios.post(`${backendUrl}/api/cart/add`, { itemId }, { headers: { token } });
             } catch (error) {
                 // Show an error message to the user if the request fails
@@ -55,11 +74,14 @@ const ShopContextProvider =({children}) => {
 
     // Function to update the quantity of a specific item in the cart
     const updateQuantity = async (itemId, quantity) => {
-         // Create a copy of the current cart items to avoid direct mutation of state
+        // Require authentication before allowing cart actions
+        if (!ensureLoggedIn()) return;
+
+        // Create a copy of the current cart items to avoid direct mutation of state
         let cartData = { ...cartItems };
-            // Update the quantity of the specified item in the cart
+        // Update the quantity of the specified item in the cart
         cartData[itemId] = quantity;
-         // Update the cart state with the new data
+        // Update the cart state with the new data
         setCartItems(cartData);
 
         // If the user is authenticated (has a token), sync the cart update with the backend

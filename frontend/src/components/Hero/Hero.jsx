@@ -48,13 +48,7 @@ const Hero = () => {
             <p>Full support on process</p>
           </div>
         </div>
-        <div className="hero_content">
-          <div className="info_icon"><MdPayment className='hero_cc-icon'/></div>
-          <div className="detail">
-            <h3>Secure Payment</h3>
-            <p>Verified payments via secure gateway</p>
-          </div>
-        </div>
+      
         
       </div>
       </div>

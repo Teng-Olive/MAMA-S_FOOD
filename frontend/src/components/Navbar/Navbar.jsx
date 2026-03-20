@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import {BiUser, BiCart} from 'react-icons/bi'
 import {FaCentos} from 'react-icons/fa'
 import './Navbar.css'
@@ -11,7 +11,7 @@ const Navbar = () => {
     // State to manage loading animation
     const [loading, setLoading] = useState(false)
     // Extracting necessary functions and values from ShopContext
-    const {updateSearchTerm, getCartCount, token, setToken} = useContext(ShopContext)
+    const {updateSearchTerm, getCartCount, token, setToken, navigate} = useContext(ShopContext)
 
     // Function to handle user logout
     const logout = () => {
@@ -19,9 +19,6 @@ const Navbar = () => {
         localStorage.removeItem("token") // Removes authentication token from local storage
         setToken(""); // Clears the token from state
     }
-
-    // Hook for navigating to different routes
-    const navigate = useNavigate();
 
         // Function to handle navigation with a loading animation
     const handleNavigation = (path) => {
@@ -37,7 +34,7 @@ const Navbar = () => {
     const [searchInput, setSearchInput] = useState('')
 
     const handleSearch = () => {
-        updateSearchTerm(searchInput);
+      updateSearchTerm(searchInput);
     }
 
   return (
@@ -53,7 +50,7 @@ const Navbar = () => {
       <nav className="navbar">
         <div className="nav-top">
           <Link to="/">
-            <h2>Mama's Delight Kitchen</h2>
+            <h2>FOAS</h2>
           </Link>
           <div className="search-bar">
             <input
@@ -61,7 +58,10 @@ const Navbar = () => {
               className="search-input"
               placeholder="Search for products ....."
               value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
+              onChange={(e) => {
+                setSearchInput(e.target.value);
+                updateSearchTerm(e.target.value);
+              }}
             />
             <button onClick={handleSearch} className="search-btn">
               SEARCH
@@ -71,16 +71,20 @@ const Navbar = () => {
             <div className="profile-group">
               <BiUser className="icon" />
               <div className="dropdown-menu">
-                <Link to="/login">
-                  <p className="dropdown-item">Login/Sign Up</p>
-                </Link>
-                <Link to="/orders">
-                  <p className="dropdown-item"> Orders</p>
-                </Link>
-                <p className="dropdown-item" onClick={logout}>
-                  Logout
-                </p>
-                
+                {token ? (
+                  <>
+                    <Link to="/orders">
+                      <p className="dropdown-item">Orders</p>
+                    </Link>
+                    <p className="dropdown-item" onClick={logout}>
+                      Logout
+                    </p>
+                  </>
+                ) : (
+                  <Link to="/login">
+                    <p className="dropdown-item">Login/Sign Up</p>
+                  </Link>
+                )}
               </div>
             </div>
             <button
