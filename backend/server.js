@@ -13,7 +13,8 @@ import Product from './models/Product.js'
 import OrderModel from './models/OrderModel.js'
 
 // --- Environment validation: fail fast for missing critical configuration ---
-const requiredEnvs = ['DB_HOST', 'DB_USER', 'DB_NAME', 'JWT_SECRET'];
+//const requiredEnvs = ['DB_HOST', 'DB_USER', 'DB_NAME', 'JWT_SECRET'];
+const requiredEnvs = ['DB_HOST', 'DB_USER', 'DB_NAME', 'DB_PASSWORD', 'JWT_SECRET'];
 const missingRequired = requiredEnvs.filter((k) => !process.env[k]);
 if (missingRequired.length > 0) {
   console.error(`Missing required environment variable(s): ${missingRequired.join(', ')}.\nPlease create backend/.env (copy from .env.example) or set these variables in your environment.`);
@@ -29,9 +30,15 @@ const port = process.env.PORT || 4000
 connectDB()
 connectCloudinary()
 
+// Trust proxy for cPanel (if behind reverse proxy)
+app.set('trust proxy', 1);
+
 // middleware
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*', // Set to your frontend URL in production
+  credentials: true
+}))
 
 // api endpoints
 app.use('/api/user', userRouter)
@@ -43,19 +50,5 @@ app.get('/', (req,res)=> {
     res.send("API Working")
 })
 
-// Start server with basic EADDRINUSE handling (tries next port if busy)
-const startServer = (p) => {
-  const server = app.listen(p, () => console.log(`Server started on port: ${p}`));
-
-  server.on('error', (err) => {
-    if (err.code === 'EADDRINUSE') {
-      console.warn(`Port ${p} is already in use. Trying port ${p + 1}...`);
-      startServer(p + 1);
-    } else {
-      console.error(err);
-      process.exit(1);
-    }
-  });
-};
-
-startServer(port);
+// Start server
+app.listen(port, '0.0.0.0', () => console.log(`Server started on port: ${port}`));

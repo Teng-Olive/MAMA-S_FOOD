@@ -39,8 +39,8 @@
     transition: background-color 0.3s , color 0.3s;
 }
 .sidebar-link:hover{
-    background-color: #f3f4f6;
-    color: #e0dcd8a6;
+    background-color: #e1ded9;
+    color: #E67E22;
 }
 .sidebar-icon{
     font-size: 30px;

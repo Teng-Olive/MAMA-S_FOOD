@@ -1,58 +1,211 @@
 .about-container {
-  max-width: 900px;
-  margin: 3rem auto;
-  padding: 0 20px;
-  min-height: 60vh;
+  width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
 }
 
 .about-header {
+  background: linear-gradient(135deg, #E67E22 0%, #ff7739 100%);
+  color: white;
+  padding: 4rem 2rem;
   text-align: center;
+  border-radius: 12px;
   margin-bottom: 3rem;
 }
 
 .about-header h1 {
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 1rem;
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0;
+  font-style: italic;
+  letter-spacing: 1px;
+}
+
+.about-subtitle {
+  font-size: 1.2rem;
+  font-style: italic;
+  margin-top: 0.5rem;
+  opacity: 0.95;
+  font-weight: 300;
 }
 
 .about-content {
-  background-color: #f9f9f9;
-  padding: 2rem;
-  border-radius: 8px;
-  border-left: 5px solid #d2042d;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
 .about-section {
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
+}
+
+.section-title {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  color: #E67E22;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.about-text {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .about-text p {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   line-height: 1.8;
   color: #555;
   margin-bottom: 1.5rem;
   text-align: justify;
 }
 
-.about-text p:last-child {
+.about-text p:last-of-type {
   margin-bottom: 0;
+}
+
+.highlight {
+  color: #E67E22;
+  font-weight: 600;
+}
+
+.highlight.italic {
+  font-style: italic;
+  font-weight: 500;
+}
+
+.dishes-offered {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.dish-badge {
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  background-color: #fef3f0;
+  border: 1.5px solid #E67E22;
+  color: #E67E22;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.dish-badge:hover {
+  background-color: #E67E22;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.values-section {
+  margin-top: 5rem;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+.value-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.value-card:hover {
+  box-shadow: 0 8px 20px rgba(230, 126, 34, 0.1);
+  transform: translateY(-4px);
+}
+
+.value-icon {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.value-card h3 {
+  font-size: 1.3rem;
+  color: #333;
+  margin: 0 0 0.8rem 0;
+  font-weight: 600;
+}
+
+.value-card p {
+  font-size: 0.95rem;
+  color: #777;
+  line-height: 1.6;
+  margin: 0;
 }
 
 @media (max-width: 768px) {
   .about-container {
-    margin: 2rem auto;
+    margin: 1.5rem auto;
+  }
+
+  .about-header {
+    padding: 2.5rem 1.5rem;
+    margin-bottom: 2rem;
   }
 
   .about-header h1 {
     font-size: 2rem;
   }
 
-  .about-text p {
+  .about-subtitle {
     font-size: 1rem;
   }
 
   .about-content {
+    padding: 0 1rem;
+  }
+
+  .about-text {
     padding: 1.5rem;
+  }
+
+  .about-text p {
+    font-size: 1rem;
+    text-align: left;
+  }
+
+  .dishes-offered {
+    gap: 0.8rem;
+  }
+
+  .dish-badge {
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .values-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .value-card {
+    padding: 1.5rem;
+  }
+
+  .value-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .value-card h3 {
+    font-size: 1.1rem;
   }
 }
